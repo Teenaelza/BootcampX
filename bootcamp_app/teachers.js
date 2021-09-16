@@ -6,7 +6,7 @@ const pool = new Pool({
   host: "localhost",
   database: "bootcampx",
 });
-
+const values = [`${process.argv[2] || "JUL02"}`];
 pool
   .query(
     `
@@ -16,8 +16,9 @@ pool
     JOIN students ON students.id=assistance_requests.student_id
     JOIN cohorts ON cohorts.id=students.cohort_id
     GROUP BY teachers.name,cohorts.name
-    HAVING cohorts.name='${process.argv[2] || "JUL02"}'
-    ORDER BY teacher;`
+    HAVING cohorts.name=$1
+    ORDER BY teacher;`,
+    values
   )
   .then((res) => {
     res.rows.forEach((row) => {
